@@ -41,3 +41,12 @@ git clone https://github.com/YOUR_USERNAME/memeverse-mobile.git
 ## Project Status
 This project is currently under development. The mobile application is being integrated with the MemeVerse web API.
 Login and server connection are working, while home feed, posts, voting, comments, upload, profile, and other features are being improved step by step.
+
+## Group Members
+<lu>
+  <li>Fabia, Sean Ivan</li>
+  <li>Pinca, Paolo Leandro</li>
+  <li>Ordonia, Marl June</li>
+  <li>Quitorio, Adielyn</li>
+  <li>Balat, Khrister John</li>
+</lu>
