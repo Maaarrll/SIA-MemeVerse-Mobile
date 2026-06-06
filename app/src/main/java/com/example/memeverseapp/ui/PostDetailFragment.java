@@ -1,5 +1,8 @@
 package com.example.memeverseapp.ui;
 
+import com.example.memeverseapp.models.VoteBody;
+import com.example.memeverseapp.models.CommentBody;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +29,7 @@ import com.example.memeverseapp.models.Post;
 import com.example.memeverseapp.models.PostDetailResponse;
 import com.example.memeverseapp.models.VoteResponse;
 import com.example.memeverseapp.network.ApiService;
-import com.example.memeverseapp.network.RetrofitClient;
+import com.example.memeverseapp.services.RetrofitClient;
 import com.example.memeverseapp.utils.PreferencesManager;
 import com.example.memeverseapp.utils.TimeUtils;
 import com.example.memeverseapp.utils.ToastUtils;
@@ -130,7 +133,7 @@ public class PostDetailFragment extends Fragment implements CommentAdapter.OnCom
                 return;
             }
 
-            addComment(text, 0);
+            addComment(text);
         });
 
         btnEdit.setOnClickListener(v -> showEditPostDialog());
@@ -141,9 +144,15 @@ public class PostDetailFragment extends Fragment implements CommentAdapter.OnCom
         apiService.getPost(postId).enqueue(new Callback<PostDetailResponse>() {
             @Override
             public void onResponse(Call<PostDetailResponse> call, Response<PostDetailResponse> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                if (response.isSuccessful() && response.body() != null) {
                     post = response.body().getPost();
-                    displayPost();
+
+                    if (post != null) {
+                        displayPost();
+                    } else {
+                        ToastUtils.showError(requireActivity(), "Post not found");
+                    }
+
                 } else {
                     ToastUtils.showError(requireActivity(), "Failed to load post");
                 }
@@ -159,11 +168,27 @@ public class PostDetailFragment extends Fragment implements CommentAdapter.OnCom
     private void displayPost() {
         if (post == null) return;
 
-        tvUsername.setText(post.getNickname() != null ? post.getNickname() : post.getUsername());
-        tvTime.setText(TimeUtils.getTimeAgo(post.getCreated_at()));
-        tvCategory.setText(post.getCategory_name());
-        tvTitle.setText(post.getTitle());
-        tvDescription.setText(post.getDescription());
+        String displayName = post.getNickname();
+
+        if (displayName == null || displayName.trim().isEmpty()) {
+            displayName = post.getUsername();
+        }
+
+        if (displayName == null || displayName.trim().isEmpty()) {
+            displayName = "Unknown User";
+        }
+
+        tvUsername.setText(displayName);
+
+        if (post.getCreated_at() != null && !post.getCreated_at().isEmpty()) {
+            tvTime.setText(TimeUtils.getTimeAgo(post.getCreated_at()));
+        } else {
+            tvTime.setText("");
+        }
+
+        tvCategory.setText(post.getCategory_name() != null ? post.getCategory_name() : "No Category");
+        tvTitle.setText(post.getTitle() != null ? post.getTitle() : "");
+        tvDescription.setText(post.getDescription() != null ? post.getDescription() : "");
         tvVoteScore.setText(String.valueOf(post.getVote_score()));
 
         String imageUrl = RetrofitClient.getFullUrl(post.getImage_path());
@@ -173,14 +198,20 @@ public class PostDetailFragment extends Fragment implements CommentAdapter.OnCom
             Glide.with(requireContext())
                     .load(imageUrl)
                     .placeholder(R.drawable.ic_placeholder)
+                    .error(R.drawable.ic_placeholder)
                     .into(ivImage);
+        } else {
+            ivImage.setImageResource(R.drawable.ic_placeholder);
         }
 
         if (avatarUrl != null) {
             Glide.with(requireContext())
                     .load(avatarUrl)
                     .placeholder(R.drawable.ic_default_avatar)
+                    .error(R.drawable.ic_default_avatar)
                     .into(ivAvatar);
+        } else {
+            ivAvatar.setImageResource(R.drawable.ic_default_avatar);
         }
 
         if (post.getUser_id() == prefManager.getUserId()) {
@@ -199,12 +230,21 @@ public class PostDetailFragment extends Fragment implements CommentAdapter.OnCom
     }
 
     private void votePost(String voteType) {
-        apiService.vote(postId, voteType).enqueue(new Callback<VoteResponse>() {
+        int voteValue;
+
+        if ("up".equals(voteType)) {
+            voteValue = 1;
+        } else if ("down".equals(voteType)) {
+            voteValue = -1;
+        } else {
+            voteValue = 0;
+        }
+
+        apiService.vote(new VoteBody(postId, voteValue)).enqueue(new Callback<VoteResponse>() {
             @Override
             public void onResponse(Call<VoteResponse> call, Response<VoteResponse> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    tvVoteScore.setText(String.valueOf(response.body().getNew_score()));
-                    ToastUtils.showSuccess(requireActivity(), "Vote recorded");
+                    loadPost();
                 } else {
                     ToastUtils.showError(requireActivity(), "Vote failed");
                 }
@@ -212,13 +252,13 @@ public class PostDetailFragment extends Fragment implements CommentAdapter.OnCom
 
             @Override
             public void onFailure(Call<VoteResponse> call, Throwable t) {
-                ToastUtils.showError(requireActivity(), "Network error");
+                ToastUtils.showError(requireActivity(), "Network error: " + t.getMessage());
             }
         });
     }
 
-    private void addComment(String text, int parentId) {
-        apiService.addComment(postId, text, parentId).enqueue(new Callback<ApiResponse>() {
+    private void addComment(String text) {
+        apiService.addComment(new CommentBody(postId, text)).enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
@@ -232,7 +272,7 @@ public class PostDetailFragment extends Fragment implements CommentAdapter.OnCom
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                ToastUtils.showError(requireActivity(), "Network error");
+                ToastUtils.showError(requireActivity(), "Network error: " + t.getMessage());
             }
         });
     }
@@ -249,7 +289,7 @@ public class PostDetailFragment extends Fragment implements CommentAdapter.OnCom
                     String reply = input.getText().toString().trim();
 
                     if (!reply.isEmpty()) {
-                        addComment(reply, comment.getId());
+                        addComment(reply);
                     }
                 })
                 .setNegativeButton("Cancel", null)
@@ -280,7 +320,7 @@ public class PostDetailFragment extends Fragment implements CommentAdapter.OnCom
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                ToastUtils.showError(requireActivity(), "Network error");
+                ToastUtils.showError(requireActivity(), "Network error: " + t.getMessage());
             }
         });
     }
@@ -332,7 +372,7 @@ public class PostDetailFragment extends Fragment implements CommentAdapter.OnCom
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                ToastUtils.showError(requireActivity(), "Network error");
+                ToastUtils.showError(requireActivity(), "Network error: " + t.getMessage());
             }
         });
     }
@@ -360,7 +400,7 @@ public class PostDetailFragment extends Fragment implements CommentAdapter.OnCom
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                ToastUtils.showError(requireActivity(), "Network error");
+                ToastUtils.showError(requireActivity(), "Network error: " + t.getMessage());
             }
         });
     }

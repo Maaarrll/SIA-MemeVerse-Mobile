@@ -6,26 +6,33 @@ import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.memeverseapp.MainActivity;
 import com.example.memeverseapp.R;
 import com.example.memeverseapp.utils.PreferencesManager;
 
 public class SplashActivity extends AppCompatActivity {
+
+    private PreferencesManager prefManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        new Handler().postDelayed(() -> {
-            PreferencesManager prefManager = new PreferencesManager(this);
+        prefManager = new PreferencesManager(this);
 
-            if (prefManager.isLoggedIn()) {
-                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+        new Handler().postDelayed(() -> {
+            Intent intent;
+
+            if (prefManager.isLoggedIn() && prefManager.getUserId() > 0) {
+                intent = new Intent(SplashActivity.this, MainActivity.class);
             } else {
-                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                intent = new Intent(SplashActivity.this, LoginActivity.class);
             }
 
+            startActivity(intent);
             finish();
-        }, 2000);
+
+        }, 1500);
     }
 }

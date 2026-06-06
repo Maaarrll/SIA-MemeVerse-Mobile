@@ -1,7 +1,6 @@
 package com.example.memeverseapp.models;
 
 public class CommentDeleteBody {
-
     private int comment_id;
 
     public CommentDeleteBody(int comment_id) {

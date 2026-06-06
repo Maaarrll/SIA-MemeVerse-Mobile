@@ -18,8 +18,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.memeverseapp.R;
 import com.example.memeverseapp.models.UnreadCountResponse;
 import com.example.memeverseapp.network.ApiService;
-import com.example.memeverseapp.network.RetrofitClient;
-import com.example.memeverseapp.ui.MainActivity;
+import com.example.memeverseapp.MainActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;

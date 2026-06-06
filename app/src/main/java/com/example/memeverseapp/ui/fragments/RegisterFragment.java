@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 import com.example.memeverseapp.R;
 import com.example.memeverseapp.models.ApiResponse;
 import com.example.memeverseapp.network.ApiService;
-import com.example.memeverseapp.network.RetrofitClient;
+import com.example.memeverseapp.services.RetrofitClient;
 import com.example.memeverseapp.ui.LoginActivity;
 
 import retrofit2.Call;

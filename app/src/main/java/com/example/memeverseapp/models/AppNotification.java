@@ -1,29 +1,38 @@
 package com.example.memeverseapp.models;
 
-public class Message {
+public class AppNotification {
 
     private int id;
-    private int sender_id;
-    private int receiver_id;
+    private int user_id;
+    private String type;
+    private String title;
     private String message;
+    private int related_id;
     private int is_read;
     private String created_at;
-    private boolean is_mine;
 
     public int getId() {
         return id;
     }
 
-    public int getSender_id() {
-        return sender_id;
+    public int getUser_id() {
+        return user_id;
     }
 
-    public int getReceiver_id() {
-        return receiver_id;
+    public String getType() {
+        return type;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public String getMessage() {
         return message;
+    }
+
+    public int getRelated_id() {
+        return related_id;
     }
 
     public int getIs_read() {
@@ -32,9 +41,5 @@ public class Message {
 
     public String getCreated_at() {
         return created_at;
-    }
-
-    public boolean isMine() {
-        return is_mine;
     }
 }

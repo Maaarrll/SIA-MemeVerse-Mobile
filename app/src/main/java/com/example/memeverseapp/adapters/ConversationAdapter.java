@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.memeverseapp.R;
 import com.example.memeverseapp.models.Conversation;
-import com.example.memeverseapp.network.RetrofitClient;
+import com.example.memeverseapp.services.RetrofitClient;
 
 import java.util.List;
 

@@ -17,10 +17,11 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.example.memeverseapp.MainActivity;
 import com.example.memeverseapp.R;
 import com.example.memeverseapp.models.ApiResponse;
 import com.example.memeverseapp.network.ApiService;
-import com.example.memeverseapp.network.RetrofitClient;
+import com.example.memeverseapp.services.RetrofitClient;
 import com.example.memeverseapp.utils.PreferencesManager;
 import com.example.memeverseapp.utils.ToastUtils;
 

@@ -4,23 +4,19 @@ import java.util.List;
 
 public class NotificationsResponse {
 
-    private List<Notification> notifications;
-    private int unread_count;
+    private boolean success;
+    private String error;
+    private List<AppNotification> notifications;
 
-    public List<Notification> getNotifications() {
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public List<AppNotification> getNotifications() {
         return notifications;
-    }
-
-    public void setNotifications(List<Notification> notifications) {
-        this.notifications = notifications;
-    }
-
-
-    public int getUnread_count() {
-        return unread_count;
-    }
-
-    public void setUnread_count(int unread_count) {
-        this.unread_count = unread_count;
     }
 }

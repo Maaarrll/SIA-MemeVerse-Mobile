@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.memeverseapp.R;
 import com.example.memeverseapp.models.Post;
-import com.example.memeverseapp.network.RetrofitClient;
+import com.example.memeverseapp.services.RetrofitClient;
 import com.example.memeverseapp.utils.TimeUtils;
 
 import java.util.List;
@@ -93,11 +93,27 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         }
 
         void bind(Post post) {
-            tvUsername.setText(post.getNickname() != null ? post.getNickname() : post.getUsername());
-            tvTime.setText(TimeUtils.getTimeAgo(post.getCreated_at()));
-            tvCategory.setText(post.getCategory_name());
-            tvCaption.setText(post.getTitle());
-            tvDescription.setText(post.getDescription());
+            String displayName = post.getNickname();
+
+            if (displayName == null || displayName.trim().isEmpty()) {
+                displayName = post.getUsername();
+            }
+
+            if (displayName == null || displayName.trim().isEmpty()) {
+                displayName = "Unknown User";
+            }
+
+            tvUsername.setText(displayName);
+
+            if (post.getCreated_at() != null && !post.getCreated_at().isEmpty()) {
+                tvTime.setText(TimeUtils.getTimeAgo(post.getCreated_at()));
+            } else {
+                tvTime.setText("");
+            }
+
+            tvCategory.setText(post.getCategory_name() != null ? post.getCategory_name() : "No Category");
+            tvCaption.setText(post.getTitle() != null ? post.getTitle() : "");
+            tvDescription.setText(post.getDescription() != null ? post.getDescription() : "");
             tvTags.setText(post.getTags() != null ? post.getTags() : "");
             tvVoteScore.setText(String.valueOf(post.getVote_score()));
 
@@ -109,6 +125,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                         .load(avatarUrl)
                         .centerCrop()
                         .placeholder(R.drawable.ic_default_avatar)
+                        .error(R.drawable.ic_default_avatar)
                         .into(ivAvatar);
             } else {
                 ivAvatar.setImageResource(R.drawable.ic_default_avatar);
@@ -119,6 +136,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                         .load(imageUrl)
                         .fitCenter()
                         .placeholder(R.drawable.ic_placeholder)
+                        .error(R.drawable.ic_placeholder)
                         .into(ivPostImage);
             } else {
                 ivPostImage.setImageResource(R.drawable.ic_placeholder);

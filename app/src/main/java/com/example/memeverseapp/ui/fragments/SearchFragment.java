@@ -19,7 +19,7 @@ import com.example.memeverseapp.models.Post;
 import com.example.memeverseapp.models.SearchResponse;
 import com.example.memeverseapp.models.User;
 import com.example.memeverseapp.network.ApiService;
-import com.example.memeverseapp.network.RetrofitClient;
+import com.example.memeverseapp.services.RetrofitClient;
 import com.example.memeverseapp.ui.PostDetailFragment;
 import com.example.memeverseapp.ui.ProfileFragment;
 import com.example.memeverseapp.utils.TimeUtils;

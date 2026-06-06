@@ -2,6 +2,7 @@ package com.example.memeverseapp.models;
 
 import java.util.List;
 
+
 public class PostsResponse {
 
     private List<Post> posts;

@@ -35,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         }).attach();
     }
 
+
     public void switchToLoginTab() {
         viewPager.setCurrentItem(0);
     }

@@ -27,7 +27,7 @@ import com.example.memeverseapp.models.MessagesResponse;
 import com.example.memeverseapp.models.ReportBody;
 import com.example.memeverseapp.models.SendMessageBody;
 import com.example.memeverseapp.network.ApiService;
-import com.example.memeverseapp.network.RetrofitClient;
+import com.example.memeverseapp.services.RetrofitClient;
 import com.example.memeverseapp.ui.ProfileFragment;
 import com.example.memeverseapp.utils.PreferencesManager;
 import com.example.memeverseapp.utils.ToastUtils;
@@ -82,10 +82,10 @@ public class MessagesFragment extends Fragment implements ConversationAdapter.On
         setupButtons();
         setupPolling();
 
-        loadConversations();
-
         chatView.setVisibility(View.GONE);
         conversationListView.setVisibility(View.VISIBLE);
+
+        loadConversations();
 
         return view;
     }
@@ -141,11 +141,13 @@ public class MessagesFragment extends Fragment implements ConversationAdapter.On
             pollHandler.postDelayed(pollRunnable, 3000);
         };
 
-        pollHandler.post(pollRunnable);
+        pollHandler.postDelayed(pollRunnable, 3000);
     }
 
     private void loadConversations() {
-        apiService.getConversations().enqueue(new Callback<ConversationsResponse>() {
+        int currentUserId = prefManager.getUserId();
+
+        apiService.getConversations(currentUserId).enqueue(new Callback<ConversationsResponse>() {
             @Override
             public void onResponse(Call<ConversationsResponse> call, Response<ConversationsResponse> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
@@ -157,8 +159,18 @@ public class MessagesFragment extends Fragment implements ConversationAdapter.On
 
                     conversationAdapter.notifyDataSetChanged();
 
+                    if (conversationList.isEmpty()) {
+                        ToastUtils.showInfo(requireActivity(), "No conversations yet");
+                    }
+
                 } else {
-                    ToastUtils.showError(requireActivity(), "Failed to load conversations");
+                    String error = "Failed to load conversations";
+
+                    if (response.body() != null && response.body().getError() != null) {
+                        error = response.body().getError();
+                    }
+
+                    ToastUtils.showError(requireActivity(), error);
                 }
             }
 
@@ -185,8 +197,10 @@ public class MessagesFragment extends Fragment implements ConversationAdapter.On
         loadMessages(currentChatWith);
     }
 
-    private void loadMessages(int userId) {
-        apiService.getMessages(userId).enqueue(new Callback<MessagesResponse>() {
+    private void loadMessages(int otherUserId) {
+        int currentUserId = prefManager.getUserId();
+
+        apiService.getMessages(currentUserId, otherUserId).enqueue(new Callback<MessagesResponse>() {
             @Override
             public void onResponse(Call<MessagesResponse> call, Response<MessagesResponse> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
@@ -200,6 +214,11 @@ public class MessagesFragment extends Fragment implements ConversationAdapter.On
 
                     if (!messageList.isEmpty()) {
                         rvMessages.scrollToPosition(messageList.size() - 1);
+                    }
+
+                } else {
+                    if (currentChatWith != -1) {
+                        ToastUtils.showError(requireActivity(), "Failed to load messages");
                     }
                 }
             }
@@ -225,13 +244,15 @@ public class MessagesFragment extends Fragment implements ConversationAdapter.On
 
         etMessage.setText("");
 
+        int currentUserId = prefManager.getUserId();
         SendMessageBody body = new SendMessageBody(currentChatWith, text);
 
-        apiService.sendMessage(body).enqueue(new Callback<ApiResponse>() {
+        apiService.sendMessage(currentUserId, body).enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     loadMessages(currentChatWith);
+                    loadConversations();
                 } else {
                     ToastUtils.showError(requireActivity(), "Failed to send message");
                 }
@@ -239,7 +260,7 @@ public class MessagesFragment extends Fragment implements ConversationAdapter.On
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                ToastUtils.showError(requireActivity(), "Network error");
+                ToastUtils.showError(requireActivity(), "Network error: " + t.getMessage());
             }
         });
     }
@@ -320,7 +341,7 @@ public class MessagesFragment extends Fragment implements ConversationAdapter.On
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                ToastUtils.showError(requireActivity(), "Network error");
+                ToastUtils.showError(requireActivity(), "Network error: " + t.getMessage());
             }
         });
     }
@@ -334,14 +355,16 @@ public class MessagesFragment extends Fragment implements ConversationAdapter.On
                 .show();
     }
 
-    private void deleteConversation(int userId) {
-        apiService.deleteConversation(userId).enqueue(new Callback<ApiResponse>() {
+    private void deleteConversation(int otherUserId) {
+        int currentUserId = prefManager.getUserId();
+
+        apiService.deleteConversation(currentUserId, otherUserId).enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     ToastUtils.showSuccess(requireActivity(), "Conversation deleted");
 
-                    if (currentChatWith == userId) {
+                    if (currentChatWith == otherUserId) {
                         chatView.setVisibility(View.GONE);
                         conversationListView.setVisibility(View.VISIBLE);
                         currentChatWith = -1;
@@ -356,7 +379,7 @@ public class MessagesFragment extends Fragment implements ConversationAdapter.On
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                ToastUtils.showError(requireActivity(), "Network error");
+                ToastUtils.showError(requireActivity(), "Network error: " + t.getMessage());
             }
         });
     }

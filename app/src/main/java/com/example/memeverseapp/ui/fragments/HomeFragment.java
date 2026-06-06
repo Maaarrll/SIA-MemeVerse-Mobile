@@ -1,6 +1,7 @@
 package com.example.memeverseapp.ui.fragments;
 
 import com.example.memeverseapp.models.PostsResponse;
+import com.example.memeverseapp.models.VoteBody;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,7 +21,7 @@ import com.example.memeverseapp.adapters.PostAdapter;
 import com.example.memeverseapp.models.Post;
 import com.example.memeverseapp.models.VoteResponse;
 import com.example.memeverseapp.network.ApiService;
-import com.example.memeverseapp.network.RetrofitClient;
+import com.example.memeverseapp.services.RetrofitClient;
 import com.example.memeverseapp.ui.PostDetailFragment;
 import com.example.memeverseapp.ui.ProfileFragment;
 import com.example.memeverseapp.utils.PreferencesManager;
@@ -166,7 +167,17 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public void onVote(int postId, String vote) {
-        apiService.vote(postId, vote).enqueue(new Callback<VoteResponse>() {
+        int voteValue;
+
+        if ("up".equals(vote)) {
+            voteValue = 1;
+        } else if ("down".equals(vote)) {
+            voteValue = -1;
+        } else {
+            voteValue = 0;
+        }
+
+        apiService.vote(new VoteBody(postId, voteValue)).enqueue(new Callback<VoteResponse>() {
             @Override
             public void onResponse(Call<VoteResponse> call, Response<VoteResponse> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
@@ -182,7 +193,6 @@ public class HomeFragment extends Fragment implements
             }
         });
     }
-
     @Override
     public void onCommentClick(int postId) {
         PostDetailFragment fragment = PostDetailFragment.newInstance(postId);

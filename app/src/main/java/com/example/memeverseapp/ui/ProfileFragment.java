@@ -26,7 +26,7 @@ import com.example.memeverseapp.models.User;
 import com.example.memeverseapp.models.UserPostsResponse;
 import com.example.memeverseapp.models.UserResponse;
 import com.example.memeverseapp.network.ApiService;
-import com.example.memeverseapp.network.RetrofitClient;
+import com.example.memeverseapp.services.RetrofitClient;
 import com.example.memeverseapp.utils.PreferencesManager;
 import com.example.memeverseapp.utils.TimeUtils;
 import com.example.memeverseapp.utils.ToastUtils;

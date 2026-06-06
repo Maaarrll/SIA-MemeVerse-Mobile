@@ -1,144 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginStart="4dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="4dp"
     android:layout_marginBottom="12dp"
-    android:orientation="vertical"
-    android:background="@color/surface"
-    android:padding="12dp">
+    app:cardBackgroundColor="@color/surface"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="2dp"
+    app:strokeColor="@color/border"
+    app:strokeWidth="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/ivAvatar"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:src="@drawable/ic_default_avatar"
-            app:civ_border_width="1dp"
-            app:civ_border_color="@color/border" />
+        android:orientation="vertical"
+        android:padding="14dp">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_marginStart="10dp">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/ivAvatar"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:src="@drawable/ic_default_avatar"
+                app:civ_border_color="@color/border"
+                app:civ_border_width="1dp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvUsername"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Username"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="just now"
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/tvUsername"
+                android:id="@+id/tvCategory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Username"
-                android:textStyle="bold"
-                android:textSize="15sp"
-                android:textColor="@color/text_primary" />
-
-            <TextView
-                android:id="@+id/tvTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="just now"
+                android:background="@color/primary_light"
+                android:paddingStart="10dp"
+                android:paddingTop="6dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="6dp"
+                android:text="Category"
+                android:textColor="@color/primary"
                 android:textSize="12sp"
-                android:textColor="@color/text_muted" />
+                android:textStyle="bold" />
 
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tvCategory"
-            android:layout_width="wrap_content"
+            android:id="@+id/tvCaption"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Category"
-            android:textSize="12sp"
-            android:textColor="@color/primary"
-            android:background="@color/primary_light"
-            android:padding="6dp" />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tvCaption"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Post title"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:textColor="@color/text_primary"
-        android:layout_marginTop="12dp" />
-
-    <TextView
-        android:id="@+id/tvDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Post description"
-        android:textSize="14sp"
-        android:textColor="@color/text_secondary"
-        android:layout_marginTop="4dp" />
-
-    <ImageView
-        android:id="@+id/ivPostImage"
-        android:layout_width="match_parent"
-        android:layout_height="260dp"
-        android:layout_marginTop="10dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_placeholder" />
-
-    <TextView
-        android:id="@+id/tvTags"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="#meme"
-        android:textSize="13sp"
-        android:textColor="@color/text_muted"
-        android:layout_marginTop="8dp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginTop="10dp">
-
-        <ImageButton
-            android:id="@+id/btnUpvote"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_arrow_up"
-            android:contentDescription="Upvote" />
+            android:layout_marginTop="14dp"
+            android:text="Post title"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tvVoteScore"
-            android:layout_width="wrap_content"
+            android:id="@+id/tvDescription"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="0"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:textColor="@color/text_primary"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp" />
+            android:layout_marginTop="5dp"
+            android:lineSpacingExtra="2dp"
+            android:text="Post description"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp" />
 
-        <ImageButton
-            android:id="@+id/btnDownvote"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_arrow_down"
-            android:contentDescription="Downvote" />
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ivPostImage"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:layout_marginTop="12dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_placeholder"
+            app:shapeAppearanceOverlay="@style/RoundedPostImage" />
 
-        <ImageButton
-            android:id="@+id/btnComments"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_marginStart="16dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_chat"
-            android:contentDescription="Comments" />
+        <TextView
+            android:id="@+id/tvTags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="#meme"
+            android:textColor="@color/text_muted"
+            android:textSize="13sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/border" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="6dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btnUpvote"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Upvote"
+                android:padding="10dp"
+                android:src="@drawable/ic_arrow_up" />
+
+            <TextView
+                android:id="@+id/tvVoteScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:minWidth="28dp"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/btnDownvote"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Downvote"
+                android:padding="10dp"
+                android:src="@drawable/ic_arrow_down" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/btnComments"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Comments"
+                android:padding="10dp"
+                android:src="@drawable/ic_chat" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/navHeaderRoot"
+    android:layout_width="match_parent"
+    android:layout_height="170dp"
+    android:background="@color/background"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/tvHeaderLogo"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        android:background="@drawable/bg_nav_logo"
+        android:gravity="center"
+        android:text="M"
+        android:textColor="@android:color/white"
+        android:textSize="26sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvHeaderTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="MemeVerse"
+        android:textColor="@color/text_primary"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvHeaderUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="@username"
+        android:textColor="@color/text_muted"
+        android:textSize="14sp" />
+
+</LinearLayout>

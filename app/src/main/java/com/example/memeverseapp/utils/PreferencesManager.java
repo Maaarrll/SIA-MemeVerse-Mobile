@@ -18,6 +18,14 @@ public class PreferencesManager {
         prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
+    public void saveLogin(int userId, String username) {
+        prefs.edit()
+                .putInt(KEY_USER_ID, userId)
+                .putString(KEY_USERNAME, username)
+                .putBoolean(KEY_IS_LOGGED_IN, true)
+                .apply();
+    }
+
     public void setLoggedIn(boolean loggedIn) {
         prefs.edit().putBoolean(KEY_IS_LOGGED_IN, loggedIn).apply();
     }
@@ -59,6 +67,16 @@ public class PreferencesManager {
     }
 
     public void clear() {
+        boolean darkMode = isDarkMode();
+        String baseUrl = getBaseUrl();
+
+        prefs.edit().clear().apply();
+
+        setDarkMode(darkMode);
+        setBaseUrl(baseUrl);
+    }
+
+    public void logout() {
         boolean darkMode = isDarkMode();
         String baseUrl = getBaseUrl();
 
